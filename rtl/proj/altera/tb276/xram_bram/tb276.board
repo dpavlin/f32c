@@ -27,8 +27,10 @@ set_location_assignment PIN_142 -to led[2]
 set_location_assignment PIN_141 -to led[1]
 set_location_assignment PIN_138 -to led[0]
 
-set_location_assignment PIN_10 -to gpio[0]
-set_location_assignment PIN_7  -to gpio[1]
+#set_location_assignment PIN_10 -to gpio[0]
+#set_location_assignment PIN_7  -to gpio[1]
+set_location_assignment PIN_129 -to gpio[0]
+set_location_assignment PIN_133 -to gpio[1]
 set_location_assignment PIN_28 -to gpio[2]
 set_location_assignment PIN_11 -to gpio[3]
 set_location_assignment PIN_31 -to gpio[4]
@@ -69,8 +71,10 @@ set_location_assignment PIN_111 -to sw[0]
 # rs232 is not on tb276 board
 # we define it on J3 connector
 # pinout for usbserial-TTL3V3 FTDI adapter
-set_location_assignment PIN_129 -to rs232_txd
-set_location_assignment PIN_133 -to rs232_rxd
+#set_location_assignment PIN_129 -to rs232_txd
+#set_location_assignment PIN_133 -to rs232_rxd
+set_location_assignment PIN_10 -to rs232_txd
+set_location_assignment PIN_7 -to rs232_rxd
 # the 433.92 MHz antenna pin
 set_location_assignment PIN_75 -to ant_433M92
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to clk_25m
