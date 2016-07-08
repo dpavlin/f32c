@@ -46,12 +46,19 @@ entity glue is
 	C_bram_size: integer := 16;
 	C_sio: integer := 1;
 	C_gpio: integer := 32;
+
+    --C_spi: integer := 2; -- number of SPI interfaces
+    --C_pcm: boolean := true;
+    --C_timer: boolean := true;
+
+    C_cw_simple_out: integer := 7; -- simple_out (default 7) bit for 433MHz modulator. -1 to disable. set (C_framebuffer := false, C_dds := false) for 433MHz transmitter
 	C_simple_io: boolean := true
     );
     port (
 	clk_25m: in std_logic;
 	rs232_txd: out std_logic;
 	rs232_rxd: in std_logic;
+    ant_433M92: inout std_logic;
 	led: out std_logic_vector(7 downto 0);
 	gpio: inout std_logic_vector(31 downto 0);
 	btn_left, btn_right: in std_logic
@@ -61,6 +68,9 @@ end glue;
 architecture Behavioral of glue is
     signal clk: std_logic;
     signal btns: std_logic_vector(1 downto 0);
+
+    signal clk_112M5, clk_433m: std_logic;
+	signal cw_antenna: std_logic;
 begin
     -- clock synthesizer: Altera specific
     clk112: if C_clk_freq = 112 generate
@@ -77,6 +87,13 @@ begin
     );
     end generate;
 
+  clk_81_433: if C_cw_simple_out >= 0 generate
+    clkgen: entity work.pll_112M5_433M92
+    port map(
+      inclk0 => clk_112m5, c0 => clk_433m
+    );
+    end generate;
+
     -- generic BRAM glue
     glue_xram: entity work.glue_xram
     generic map (
@@ -89,6 +106,8 @@ begin
 	clk => clk,
 	sio_txd(0) => rs232_txd, sio_rxd(0) => rs232_rxd,
 	spi_sck => open, spi_ss => open, spi_mosi => open, spi_miso => "",
+      clk_cw => clk_433m,
+	  cw_antenna => ant_433M92,
 	gpio(31 downto 0) => gpio(31 downto 0), gpio(127 downto 32) => open,
 	simple_out(7 downto 0) => led, simple_out(31 downto 8) => open,
 	simple_in(1 downto 0) => btns, simple_in(31 downto 2) => open
